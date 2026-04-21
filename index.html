@@ -1,0 +1,2770 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nekkanti Gokul Hutaasan — IoT × AI Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=JetBrains+Mono:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@1,300;1,600&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --void: #010108;
+      --deep: #050510;
+      --surface: #0a0a1a;
+      --card: #0d0d20;
+      --card2: #111128;
+      --border: rgba(255, 255, 255, 0.05);
+      --border2: rgba(255, 255, 255, 0.1);
+      --teal: #00ffd5;
+      --teal2: #00bfa5;
+      --orange: #ff6b35;
+      --orange2: #ff9a6c;
+      --white: #f5f5ff;
+      --grey: #cbd5e1;
+      --grey2: #94a3b8;
+      --glow-t: rgba(0, 255, 213, 0.18);
+      --glow-o: rgba(255, 107, 53, 0.18);
+      --font-d: 'Black Han Sans', sans-serif;
+      --font-m: 'JetBrains Mono', monospace;
+      --font-s: 'Cormorant Garamond', serif;
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      background: var(--void);
+      color: var(--white);
+      font-family: var(--font-m);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* AMBIENT GLOW BACKDROP */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 15% 50%, rgba(0, 255, 213, 0.12), transparent 45%),
+        radial-gradient(circle at 85% 30%, rgba(255, 107, 53, 0.08), transparent 45%);
+      pointer-events: none;
+      z-index: 0;
+      animation: ambientGlow 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambientGlow {
+      0% { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(1.15); opacity: 1; }
+    }
+
+    /* GRAIN OVERLAY */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9997;
+      opacity: 0.6;
+    }
+
+    /* CURSOR */
+    .cur {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: var(--teal);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width .2s, height .2s, background .2s;
+      mix-blend-mode: screen
+    }
+
+    .cur-ring {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(0, 255, 213, 0.35);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width .3s, height .3s, border-color .3s
+    }
+
+    body:has(a:hover) .cur {
+      width: 16px;
+      height: 16px;
+      background: var(--orange)
+    }
+
+    body:has(a:hover) .cur-ring {
+      width: 60px;
+      height: 60px;
+      border-color: rgba(255, 107, 53, 0.5)
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 4rem;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(30px);
+      background: rgba(1, 1, 8, 0.6);
+    }
+
+    .nav-id {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-d);
+      font-size: 18px;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-iot {
+      color: var(--orange)
+    }
+
+    .nav-x {
+      color: var(--grey2);
+      margin: 0 2px
+    }
+
+    .nav-ai {
+      color: var(--teal)
+    }
+
+    .nav-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--teal);
+      padding: 6px 14px;
+      border: 1px solid rgba(0, 255, 213, 0.2);
+      border-radius: 100px;
+      background: rgba(0, 255, 213, 0.05);
+    }
+
+    .sdot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 8px var(--teal);
+      animation: sdot 2s infinite
+    }
+
+    @keyframes sdot {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0.2
+      }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none
+    }
+
+    .nav-links a {
+      color: var(--grey);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color .2s
+    }
+
+    .nav-links a:hover {
+      color: var(--white)
+    }
+
+    /* CANVAS */
+    #c3d {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 7rem 4rem 3rem;
+      gap: 3rem;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center
+    }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fu .8s .2s forwards;
+    }
+
+    .hero-label::before {
+      content: '>';
+      color: var(--grey2);
+      margin-right: 4px
+    }
+
+    .hero-name {
+      font-family: var(--font-d);
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      line-height: 1;
+      letter-spacing: 0.03em;
+      margin-bottom: .5rem;
+      opacity: 0;
+      animation: fu .8s .4s forwards;
+    }
+
+    .hero-name .iot-c {
+      color: var(--orange);
+      text-shadow: 0 0 40px rgba(255, 107, 53, .4)
+    }
+
+    .hero-name .ai-c {
+      color: var(--teal);
+      text-shadow: 0 0 40px rgba(0, 255, 213, .4)
+    }
+
+    .hero-sub {
+      font-family: var(--font-s);
+      font-style: italic;
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      color: var(--grey);
+      margin-bottom: 2rem;
+      line-height: 1.5;
+      opacity: 0;
+      animation: fu .8s .6s forwards;
+    }
+
+    .duality-bar {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 2.5rem;
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      overflow: hidden;
+      opacity: 0;
+      animation: fu .8s .7s forwards;
+    }
+
+    .db-iot {
+      flex: 1;
+      padding: 1rem 1.25rem;
+      background: rgba(255, 107, 53, 0.07);
+      border-right: 1px solid var(--border2);
+    }
+
+    .db-ai {
+      flex: 1;
+      padding: 1rem 1.25rem;
+      background: rgba(0, 255, 213, 0.05)
+    }
+
+    .db-label {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 6px
+    }
+
+    .db-iot .db-label {
+      color: var(--orange)
+    }
+
+    .db-ai .db-label {
+      color: var(--teal)
+    }
+
+    .db-items {
+      font-size: 11px;
+      color: var(--grey);
+      line-height: 1.8
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fu .8s .85s forwards;
+    }
+
+    .htag {
+      font-size: 10px;
+      padding: 4px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border2);
+      color: var(--grey);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: all .2s;
+    }
+
+    .htag.t {
+      border-color: rgba(0, 255, 213, .25);
+      color: var(--teal);
+      background: rgba(0, 255, 213, .04)
+    }
+
+    .htag.o {
+      border-color: rgba(255, 107, 53, .25);
+      color: var(--orange);
+      background: rgba(255, 107, 53, .04)
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+      opacity: 0;
+      animation: fu .8s 1s forwards;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      border-radius: 8px;
+      font-family: var(--font-m);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      transition: all .25s;
+      cursor: none;
+      text-transform: uppercase;
+    }
+
+    .btn-t {
+      background: var(--teal);
+      color: #010108;
+      font-weight: 700;
+      box-shadow: 0 0 30px rgba(0, 255, 213, .25)
+    }
+
+    .btn-t:hover {
+      box-shadow: 0 0 60px rgba(0, 255, 213, .5);
+      transform: translateY(-3px)
+    }
+
+    .btn-o {
+      border: 1px solid rgba(255, 107, 53, .4);
+      color: var(--orange)
+    }
+
+    .btn-o:hover {
+      background: rgba(255, 107, 53, .08);
+      transform: translateY(-3px);
+      box-shadow: 0 0 30px rgba(255, 107, 53, .15)
+    }
+
+    /* HERO RIGHT — 3D canvas placeholder area */
+    .hero-right {
+      position: relative;
+      height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      animation: fu 1.2s .5s forwards;
+    }
+
+    .hero-canvas-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    #iot-ai-canvas {
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: rgba(5, 5, 16, 0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    .canvas-label {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey2);
+      white-space: nowrap;
+    }
+
+    /* SCROLL HINT */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey2);
+      z-index: 2;
+      opacity: 0;
+      animation: fu .8s 1.4s forwards;
+    }
+
+    .scroll-arrow {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(180deg, transparent, var(--teal));
+      animation: sarrow 2s ease-in-out infinite;
+    }
+
+    @keyframes sarrow {
+
+      0%,
+      100% {
+        opacity: 0;
+        transform: scaleY(0.3)
+      }
+
+      50% {
+        opacity: 1;
+        transform: scaleY(1)
+      }
+    }
+
+    /* DIVIDER */
+    .div-line {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--deep);
+      padding: .8rem 0;
+    }
+
+    .div-track {
+      display: flex;
+      gap: 2.5rem;
+      animation: mq 30s linear infinite;
+      width: max-content;
+    }
+
+    .di {
+      font-family: var(--font-d);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      color: var(--grey2);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-transform: uppercase;
+    }
+
+    .di .dot-t {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 6px var(--teal)
+    }
+
+    .di .dot-o {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: 0 0 6px var(--orange)
+    }
+
+    @keyframes mq {
+      from {
+        transform: translateX(0)
+      }
+
+      to {
+        transform: translateX(-50%)
+      }
+    }
+
+    /* SECTION BASE */
+    section {
+      position: relative;
+      z-index: 1
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 6rem 4rem
+    }
+
+    .sl {
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: .75rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sl.orange {
+      color: var(--orange)
+    }
+
+    .sl::before {
+      content: '//';
+      color: var(--grey2);
+      font-size: 11px
+    }
+
+    .st {
+      font-family: var(--font-d);
+      font-size: clamp(2.2rem, 5vw, 4.5rem);
+      letter-spacing: 0.04em;
+      line-height: 1;
+      margin-bottom: 3.5rem;
+    }
+
+    .st .t {
+      color: var(--teal)
+    }
+
+    .st .o {
+      color: var(--orange)
+    }
+
+    /* ─── PATENTS ─── */
+    .pat-section {
+      background: var(--deep);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .pat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem
+    }
+
+    .pat-card {
+      perspective: 900px;
+      height: 300px;
+      cursor: none;
+    }
+
+    .pat-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform .7s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .pat-card:hover .pat-inner {
+      transform: rotateY(180deg)
+    }
+
+    .pat-face,
+    .pat-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      padding: 2rem;
+      border: 1px solid var(--border2);
+      overflow: hidden;
+    }
+
+    .pat-face {
+      background: var(--card);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pat-face::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      border-radius: 16px 16px 0 0;
+    }
+
+    .pat-face.teal::before {
+      background: linear-gradient(90deg, var(--teal), transparent)
+    }
+
+    .pat-face.orange::before {
+      background: linear-gradient(90deg, var(--orange), transparent)
+    }
+
+    .pat-face.green::before {
+      background: linear-gradient(90deg, #4ade80, transparent)
+    }
+
+    /* circuit pattern bg */
+    .pat-face::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 20px 20px;
+      border-radius: 16px;
+      pointer-events: none;
+    }
+
+    .pat-back {
+      background: var(--card2);
+      transform: rotateY(180deg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .pat-badge {
+      display: inline-block;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-bottom: 1rem;
+      width: fit-content;
+    }
+
+    .badge-t {
+      color: var(--teal);
+      background: rgba(0, 255, 213, .08);
+      border: 1px solid rgba(0, 255, 213, .2)
+    }
+
+    .badge-o {
+      color: var(--orange);
+      background: rgba(255, 107, 53, .08);
+      border: 1px solid rgba(255, 107, 53, .2)
+    }
+
+    .badge-g {
+      color: #4ade80;
+      background: rgba(74, 222, 128, .08);
+      border: 1px solid rgba(74, 222, 128, .2)
+    }
+
+    .pat-num {
+      font-family: var(--font-d);
+      font-size: 5rem;
+      color: rgba(255, 255, 255, 0.03);
+      position: absolute;
+      bottom: .5rem;
+      right: 1rem;
+      line-height: 1;
+      letter-spacing: 0.05em;
+    }
+
+    .pat-title {
+      font-size: .95rem;
+      font-weight: 500;
+      margin-bottom: .75rem;
+      line-height: 1.4;
+      flex: 1;
+      position: relative;
+      z-index: 1
+    }
+
+    .pat-desc {
+      font-size: 11px;
+      color: var(--grey);
+      line-height: 1.6;
+      position: relative;
+      z-index: 1
+    }
+
+    .pat-flip {
+      font-size: 9px;
+      color: var(--grey2);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-top: auto;
+      padding-top: 1rem;
+      position: relative;
+      z-index: 1
+    }
+
+    .pat-back-ico {
+      font-size: 2.5rem;
+      margin-bottom: .75rem
+    }
+
+    .pat-back-body {
+      font-size: 12px;
+      color: var(--grey);
+      line-height: 1.6;
+      margin-bottom: 1rem
+    }
+
+    .ptags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 5px
+    }
+
+    .ptag {
+      font-size: 9px;
+      padding: 2px 9px;
+      border-radius: 100px;
+      background: rgba(255, 255, 255, .05);
+      color: var(--grey2);
+      border: 1px solid var(--border)
+    }
+
+    /* ─── PROJECTS ─── */
+    .proj-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem
+    }
+
+    .pj {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all .35s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .pj::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    .pj.t::before {
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      opacity: .6
+    }
+
+    .pj.o::before {
+      background: linear-gradient(90deg, transparent, var(--orange), transparent)
+    }
+
+    .pj.t:hover::before,
+    .pj.o:hover::before {
+      opacity: 1
+    }
+
+    .pj:hover {
+      transform: translateY(-6px);
+      border-color: var(--border2);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .6);
+    }
+
+    /* circuit board bg on cards */
+    .pj::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+      border-radius: 16px;
+    }
+
+    .pj.wide {
+      grid-column: 1/-1
+    }
+
+    .pj.wide .pj-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center
+    }
+
+    .pj-cat {
+      font-size: 9px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      margin-bottom: .75rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .pj-cat.t {
+      color: var(--teal)
+    }
+
+    .pj-cat.o {
+      color: var(--orange)
+    }
+
+    .pj-cat::before {
+      content: '[';
+      color: var(--grey2)
+    }
+
+    .pj-cat::after {
+      content: ']';
+      color: var(--grey2)
+    }
+
+    .pj-title {
+      font-family: var(--font-d);
+      font-size: 1.25rem;
+      letter-spacing: .02em;
+      margin-bottom: .75rem;
+      line-height: 1.2;
+      position: relative;
+      z-index: 1;
+    }
+
+    .pj-desc {
+      font-size: 12px;
+      color: var(--grey);
+      line-height: 1.75;
+      margin-bottom: 1.25rem;
+      position: relative;
+      z-index: 1
+    }
+
+    .pj-stats {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 1.25rem;
+      position: relative;
+      z-index: 1
+    }
+
+    .pstat {
+      text-align: center
+    }
+
+    .pstat-val {
+      font-family: var(--font-d);
+      font-size: 2.2rem;
+      letter-spacing: .04em;
+      line-height: 1;
+    }
+
+    .pstat.t .pstat-val {
+      color: var(--teal);
+      text-shadow: 0 0 20px rgba(0, 255, 213, .4)
+    }
+
+    .pstat.o .pstat-val {
+      color: var(--orange);
+      text-shadow: 0 0 20px rgba(255, 107, 53, .4)
+    }
+
+    .pstat-lab {
+      font-size: 9px;
+      color: var(--grey2);
+      letter-spacing: .08em;
+      margin-top: 3px
+    }
+
+    .pj-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      position: relative;
+      z-index: 1
+    }
+
+    .pj-tag {
+      font-size: 9px;
+      padding: 3px 9px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, .04);
+      color: var(--grey2);
+      border: 1px solid var(--border)
+    }
+
+    /* pipeline */
+    .pipeline {
+      background: var(--void);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .pl-title {
+      font-size: 9px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--grey2);
+      margin-bottom: 1rem
+    }
+
+    .pl-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      margin-bottom: 6px;
+      background: var(--surface);
+      border-radius: 7px;
+      font-size: 11px;
+      color: var(--grey);
+      border-left: 2px solid transparent;
+      transition: all .2s;
+    }
+
+    .pl-step:hover {
+      color: var(--white);
+      background: var(--card)
+    }
+
+    .pl-step.t {
+      border-left-color: var(--teal)
+    }
+
+    .pl-step.o {
+      border-left-color: var(--orange)
+    }
+
+    .pl-step.g {
+      border-left-color: #4ade80
+    }
+
+    .pl-step.y {
+      border-left-color: #fbbf24
+    }
+
+    .pl-step.p {
+      border-left-color: #a78bfa
+    }
+
+    .pl-num {
+      font-size: 9px;
+      color: var(--grey2);
+      letter-spacing: .05em;
+      margin-top: 1px;
+      flex-shrink: 0
+    }
+
+    /* ─── SKILLS ─── */
+    .sk-section {
+      background: var(--deep);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .sk-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem
+    }
+
+    .sk-group {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: all .3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sk-group:hover {
+      border-color: var(--border2);
+      transform: translateY(-3px)
+    }
+
+    /* tiny circuit dots in bg */
+    .sk-group::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 80px;
+      height: 80px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 50%;
+    }
+
+    .sk-group::after {
+      content: '';
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 50%;
+    }
+
+    .sg-icon {
+      font-size: 1.5rem;
+      margin-bottom: .75rem;
+      position: relative;
+      z-index: 1
+    }
+
+    .sg-title {
+      font-family: var(--font-d);
+      font-size: 13px;
+      letter-spacing: .04em;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1
+    }
+
+    .sg-title.t {
+      color: var(--teal)
+    }
+
+    .sg-title.o {
+      color: var(--orange)
+    }
+
+    .sk-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--grey);
+      margin-bottom: 9px;
+      position: relative;
+      z-index: 1
+    }
+
+    .sbar {
+      width: 70px;
+      height: 2px;
+      background: var(--card2);
+      border-radius: 10px;
+      overflow: hidden
+    }
+
+    .sbar-f {
+      height: 100%;
+      border-radius: 10px;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 1.3s cubic-bezier(.4, 0, .2, 1)
+    }
+
+    .sbar-f.t {
+      background: linear-gradient(90deg, var(--teal), rgba(0, 255, 213, .4))
+    }
+
+    .sbar-f.o {
+      background: linear-gradient(90deg, var(--orange), rgba(255, 107, 53, .4))
+    }
+
+    /* ─── ACHIEVEMENTS ─── */
+    .ach-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 3.5rem
+    }
+
+    .ach {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem;
+      text-align: center;
+      transition: all .3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ach:hover {
+      transform: translateY(-4px);
+      border-color: var(--border2)
+    }
+
+    .ach::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    .ach.t::after {
+      background: linear-gradient(90deg, transparent, var(--teal), transparent)
+    }
+
+    .ach.o::after {
+      background: linear-gradient(90deg, transparent, var(--orange), transparent)
+    }
+
+    .ach:hover::after {
+      opacity: 1
+    }
+
+    .ach-ico {
+      font-size: 2rem;
+      margin-bottom: .75rem
+    }
+
+    .ach-title {
+      font-family: var(--font-d);
+      font-size: .95rem;
+      letter-spacing: .03em;
+      margin-bottom: .5rem
+    }
+
+    .ach-desc {
+      font-size: 11px;
+      color: var(--grey);
+      line-height: 1.6
+    }
+
+    /* CERT */
+    .cert {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1rem;
+      transition: all .25s;
+    }
+
+    .cert:hover {
+      border-color: rgba(255, 107, 53, .3);
+      transform: translateX(4px)
+    }
+
+    .cert-ico {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      background: rgba(255, 107, 53, .1);
+      border: 1px solid rgba(255, 107, 53, .2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .cert-name {
+      font-weight: 500;
+      font-size: 13px;
+      margin-bottom: 2px
+    }
+
+    .cert-org {
+      font-size: 10px;
+      color: var(--grey2);
+      letter-spacing: .05em
+    }
+
+    /* EDU */
+    .edu-line {
+      position: relative;
+      padding-left: 2.5rem
+    }
+
+    .edu-line::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: linear-gradient(180deg, var(--teal), var(--orange), transparent);
+    }
+
+    .edu-item {
+      position: relative;
+      margin-bottom: 2.5rem
+    }
+
+    .edu-item::before {
+      content: '';
+      position: absolute;
+      left: -2.875rem;
+      top: 7px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: 2px solid var(--void);
+      box-shadow: 0 0 0 3px rgba(0, 255, 213, .15), 0 0 14px var(--teal);
+    }
+
+    .edu-item:nth-child(2)::before {
+      background: var(--orange);
+      box-shadow: 0 0 0 3px rgba(255, 107, 53, .15), 0 0 14px var(--orange)
+    }
+
+    .edu-deg {
+      font-weight: 500;
+      font-size: 1rem;
+      margin-bottom: 3px
+    }
+
+    .edu-school {
+      font-size: 12px;
+      color: var(--grey);
+      margin-bottom: 3px
+    }
+
+    .edu-meta {
+      font-size: 10px;
+      color: var(--grey2);
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap
+    }
+
+    .edu-score.t {
+      color: var(--teal)
+    }
+
+    .edu-score.o {
+      color: var(--orange)
+    }
+
+    /* ─── CONTACT ─── */
+    .ct-section {
+      background: var(--deep);
+      border-top: 1px solid var(--border)
+    }
+
+    .ct-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start
+    }
+
+    .ct-big {
+      font-family: var(--font-d);
+      font-size: clamp(2.5rem, 5.5vw, 5rem);
+      letter-spacing: .04em;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .ct-big .ts {
+      font-family: var(--font-s);
+      font-style: italic;
+      color: var(--teal)
+    }
+
+    .ct-sub {
+      font-size: 12px;
+      color: var(--grey);
+      line-height: 1.8;
+      margin-bottom: 2rem
+    }
+
+    .open-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 2rem
+    }
+
+    .ot {
+      font-size: 10px;
+      padding: 5px 12px;
+      border-radius: 100px;
+      letter-spacing: .06em;
+      text-transform: uppercase
+    }
+
+    .ot.t {
+      border: 1px solid rgba(0, 255, 213, .25);
+      color: var(--teal);
+      background: rgba(0, 255, 213, .05)
+    }
+
+    .ot.o {
+      border: 1px solid rgba(255, 107, 53, .25);
+      color: var(--orange);
+      background: rgba(255, 107, 53, .05)
+    }
+
+    .cl {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 15px 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      text-decoration: none;
+      color: var(--white);
+      font-size: 12px;
+      margin-bottom: 10px;
+      transition: all .25s;
+      letter-spacing: .02em;
+    }
+
+    .cl:hover {
+      border-color: rgba(0, 255, 213, .3);
+      color: var(--teal);
+      transform: translateX(5px);
+      background: rgba(0, 255, 213, .03)
+    }
+
+    .cl-ico {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      background: var(--card2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .cl-main {
+      font-weight: 500;
+      border: none;
+      background: var(--teal);
+      color: var(--void);
+      justify-content: center;
+      margin-top: 8px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      box-shadow: 0 0 30px rgba(0, 255, 213, .2)
+    }
+
+    .cl-main:hover {
+      color: var(--void);
+      box-shadow: 0 0 60px rgba(0, 255, 213, .4);
+      transform: translateY(-3px) !important;
+      border-color: transparent !important
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 1.75rem 4rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+      font-size: 10px;
+      color: var(--grey2);
+      letter-spacing: .08em;
+    }
+
+    .footer-iot {
+      color: var(--orange)
+    }
+
+    .footer-ai {
+      color: var(--teal)
+    }
+
+    /* REVEAL */
+    .rv {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s, transform .7s
+    }
+
+    .rv.in {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    @keyframes fu {
+      from {
+        opacity: 0;
+        transform: translateY(22px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--card);
+      margin-bottom: 5rem;
+    }
+
+    .sb {
+      padding: 2rem 1.5rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: background .3s;
+    }
+
+    .sb:last-child {
+      border-right: none
+    }
+
+    .sb:hover {
+      background: var(--card2)
+    }
+
+    .sb::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      transform: scaleX(0);
+      transition: transform .4s;
+    }
+
+    .sb.t::before {
+      background: var(--teal)
+    }
+
+    .sb.o::before {
+      background: var(--orange)
+    }
+
+    .sb:hover::before {
+      transform: scaleX(1)
+    }
+
+    .sb-val {
+      font-family: var(--font-d);
+      font-size: 3rem;
+      letter-spacing: .04em;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+
+    .sb.t .sb-val {
+      color: var(--teal);
+      text-shadow: 0 0 20px rgba(0, 255, 213, .3)
+    }
+
+    .sb.o .sb-val {
+      color: var(--orange);
+      text-shadow: 0 0 20px rgba(255, 107, 53, .3)
+    }
+
+    .sb-lab {
+      font-size: 9px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--grey2)
+    }
+
+    /* ─── PROJECT 3D SYMBOLS ─── */
+    .p3d-wrap {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 40px;
+      height: 40px;
+      perspective: 800px;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .p3d-obj {
+      transform-style: preserve-3d;
+      position: relative;
+    }
+
+    /* 1. Cap Mate (Atom) */
+    .p3d-atom {
+      width: 25px; height: 25px;
+      border-radius: 50%;
+      border: 1px solid var(--teal);
+      transform-style: preserve-3d;
+      animation: p3d-spin 6s linear infinite;
+    }
+    .p3d-atom::before, .p3d-atom::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 50%;
+      border: 1px solid var(--teal);
+      opacity: 0.6;
+    }
+    .p3d-atom::before { transform: rotateX(60deg) rotateY(45deg); }
+    .p3d-atom::after { transform: rotateX(-60deg) rotateY(-45deg); }
+
+    /* 2. Medicare (Cross/Pulse) */
+    .p3d-cross {
+      width: 20px; height: 20px;
+      background: var(--orange);
+      box-shadow: 0 0 12px var(--orange);
+      animation: p3d-pulse 2s ease-in-out infinite alternate;
+      clip-path: polygon(33% 0, 66% 0, 66% 33%, 100% 33%, 100% 66%, 66% 66%, 66% 100%, 33% 100%, 33% 66%, 0 66%, 0 33%, 33% 33%);
+      transform: rotateY(20deg) rotateX(15deg);
+    }
+
+    /* 3. ASIC (Cube) */
+    .p3d-cube {
+      width: 20px; height: 20px;
+      border: 1px solid var(--teal);
+      transform-style: preserve-3d;
+      animation: p3d-spin 8s infinite linear;
+    }
+    .p3d-cube::before, .p3d-cube::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border: 1px dashed rgba(0, 255, 213, 0.4);
+    }
+    .p3d-cube::before { transform: translateZ(10px); }
+    .p3d-cube::after { transform: translateZ(-10px); }
+
+    /* 4. SDN (Planes) */
+    .p3d-planes {
+      width: 22px; height: 22px;
+      border: 1px solid var(--orange);
+      background: rgba(255, 107, 53, 0.1);
+      transform: rotateX(60deg) rotateZ(45deg);
+      transform-style: preserve-3d;
+      animation: p3d-float 3s ease-in-out infinite alternate;
+    }
+    .p3d-planes::before, .p3d-planes::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+    }
+    .p3d-planes::before {
+      border: 1px solid var(--orange);
+      transform: translateZ(12px);
+      opacity: 0.6;
+    }
+    .p3d-planes::after {
+      border: 1px solid rgba(255, 107, 53, 0.3);
+      transform: translateZ(-12px);
+    }
+
+    /* 5. Talking Tom (Waves) */
+    .p3d-wave {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+      height: 20px;
+      transform: rotateY(-20deg) rotateX(10deg);
+      transform-style: preserve-3d;
+    }
+    .p3d-wave span {
+      width: 3px;
+      background: var(--teal);
+      border-radius: 2px;
+      animation: p3d-wavy 1.2s ease-in-out infinite alternate;
+      box-shadow: 0 0 8px rgba(0, 255, 213, 0.4);
+    }
+    .p3d-wave span:nth-child(2) { animation-delay: 0.2s; height: 100%; }
+    .p3d-wave span:nth-child(1) { animation-delay: 0.0s; height: 40%; }
+    .p3d-wave span:nth-child(3) { animation-delay: 0.4s; height: 60%; }
+
+    /* 6. ECOPOT (Cylinder/Leaf) */
+    .p3d-eco {
+      width: 20px; height: 26px;
+      border-radius: 4px 4px 10px 10px;
+      border: 1px solid #4ade80;
+      box-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
+      transform-style: preserve-3d;
+      animation: p3d-float 4s ease-in-out infinite alternate, p3d-spin-y 8s linear infinite;
+    }
+    .p3d-eco::after {
+      content: '';
+      position: absolute;
+      top: -10px; left: 5px;
+      width: 8px; height: 8px;
+      border-radius: 0 100% 0 100%;
+      background: #4ade80;
+    }
+    .pj.g:hover { border-color: rgba(74, 222, 128, 0.3); }
+
+    @keyframes p3d-spin {
+      from { transform: rotateX(0) rotateY(0) rotateZ(0); }
+      to { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+    }
+    @keyframes p3d-spin-y {
+      from { transform: rotateY(0); }
+      to { transform: rotateY(360deg); }
+    }
+    @keyframes p3d-pulse {
+      from { transform: rotateY(20deg) rotateX(15deg) scale(0.9); opacity: 0.7; }
+      to { transform: rotateY(20deg) rotateX(15deg) scale(1.1); opacity: 1; }
+    }
+    @keyframes p3d-float {
+      from { transform: rotateX(60deg) rotateZ(45deg) translateZ(0); }
+      to { transform: rotateX(60deg) rotateZ(45deg) translateZ(8px); }
+    }
+    @keyframes p3d-wavy {
+      from { transform: scaleY(0.3); }
+      to { transform: scaleY(1); }
+    }
+
+    @media(max-width:768px) {
+      nav {
+        padding: 1rem 1.5rem
+      }
+
+      .nav-links {
+        display: none
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 6rem 1.5rem 2rem
+      }
+
+      .hero-right {
+        height: 280px
+      }
+
+      .container {
+        padding: 3rem 1.5rem
+      }
+
+      .pat-grid,
+      .proj-grid,
+      .sk-grid,
+      .ach-grid,
+      .ct-grid {
+        grid-template-columns: 1fr
+      }
+
+      .pj.wide .pj-inner {
+        grid-template-columns: 1fr
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .sb {
+        border-bottom: 1px solid var(--border)
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 6px;
+        padding: 1.5rem
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="cur" id="cur"></div>
+  <div class="cur-ring" id="crg"></div>
+
+  <canvas id="c3d"></canvas>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-id">
+      <span class="nav-iot">IoT</span>
+      <span class="nav-x">×</span>
+      <span class="nav-ai">AI</span>
+      <span style="color:var(--grey2);font-size:13px;margin-left:4px">/ Gokul</span>
+    </div>
+    <div class="nav-status">
+      <span class="sdot"></span>
+      Available · IoT+AI Full-Time
+    </div>
+    <ul class="nav-links">
+      <li><a href="#patents">Patents</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-left">
+      <div class="hero-label">IoT × AI Engineer · 3× Patent Holder · Edge Intelligence</div>
+      <h1 class="hero-name">
+        NEKKANTI<br>
+        <span class="iot-c">GOKUL</span><br>
+        <span class="ai-c">HUTAASAN</span>
+      </h1>
+      <p class="hero-sub">
+        Where sensors become neurons — building systems that sense, think, and act at the edge.
+      </p>
+
+      <div class="duality-bar">
+        <div class="db-iot">
+          <div class="db-label">IoT Layer</div>
+          <div class="db-items">ESP32 · Raspberry Pi<br>MQTT · Edge AI<br>RFID · Sensors · VLSI</div>
+        </div>
+        <div class="db-ai">
+          <div class="db-label">AI Layer</div>
+          <div class="db-items">TensorFlow · PyTorch<br>NLP · Computer Vision<br>LLM · Feature Engineering</div>
+        </div>
+      </div>
+
+      <div class="hero-tags">
+        <span class="htag t">3× Patent Holder</span>
+        <span class="htag o">IEEE Winner</span>
+        <span class="htag t">Edge AI</span>
+        <span class="htag">VLSI · ASIC</span>
+        <span class="htag o">NLP · Vision</span>
+        <span class="htag">CGPA 8.20</span>
+        <span class="htag t">FastAPI · Next.js</span>
+      </div>
+
+      <div class="hero-btns">
+        <a href="#projects" class="btn btn-t">Explore Work ↓</a>
+        <a href="mailto:gokulnekkanti04@gmail.com" class="btn btn-o">Hire Me →</a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <canvas id="iot-ai-canvas"></canvas>
+      <div class="canvas-label">// Interactive IoT × AI Neural Network — drag to rotate</div>
+    </div>
+
+    <div class="scroll-hint">
+      <div class="scroll-arrow"></div>
+      scroll
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="div-line">
+    <div class="div-track">
+      <span class="di">ESP32 <span class="dot-o"></span></span>
+      <span class="di">TensorFlow <span class="dot-t"></span></span>
+      <span class="di">EEG Signals <span class="dot-o"></span></span>
+      <span class="di">Neural Networks <span class="dot-t"></span></span>
+      <span class="di">MQTT Protocol <span class="dot-o"></span></span>
+      <span class="di">NLP Pipeline <span class="dot-t"></span></span>
+      <span class="di">ASIC Design <span class="dot-o"></span></span>
+      <span class="di">Edge Inference <span class="dot-t"></span></span>
+      <span class="di">Real-Time AI <span class="dot-o"></span></span>
+      <span class="di">3× Patents <span class="dot-t"></span></span>
+      <span class="di">Scikit-learn <span class="dot-o"></span></span>
+      <span class="di">Raspberry Pi <span class="dot-t"></span></span>
+      <span class="di">ESP32 <span class="dot-o"></span></span>
+      <span class="di">TensorFlow <span class="dot-t"></span></span>
+      <span class="di">EEG Signals <span class="dot-o"></span></span>
+      <span class="di">Neural Networks <span class="dot-t"></span></span>
+      <span class="di">MQTT Protocol <span class="dot-o"></span></span>
+      <span class="di">NLP Pipeline <span class="dot-t"></span></span>
+      <span class="di">ASIC Design <span class="dot-o"></span></span>
+      <span class="di">Edge Inference <span class="dot-t"></span></span>
+      <span class="di">Real-Time AI <span class="dot-o"></span></span>
+      <span class="di">3× Patents <span class="dot-t"></span></span>
+      <span class="di">Scikit-learn <span class="dot-o"></span></span>
+      <span class="di">Raspberry Pi <span class="dot-t"></span></span>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div style="position:relative;z-index:1;padding:0 4rem">
+    <div class="stats-row rv">
+      <div class="sb t">
+        <div class="sb-val">3×</div>
+        <div class="sb-lab">Patents Filed</div>
+      </div>
+      <div class="sb o">
+        <div class="sb-val">87%</div>
+        <div class="sb-lab">ML Accuracy</div>
+      </div>
+      <div class="sb t">
+        <div class="sb-val">40%</div>
+        <div class="sb-lab">Latency Cut</div>
+      </div>
+      <div class="sb o">
+        <div class="sb-val">5+</div>
+        <div class="sb-lab">Live Projects</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PATENTS -->
+  <section class="pat-section" id="patents">
+    <div class="container">
+      <div class="sl rv">Intellectual Property</div>
+      <h2 class="st rv">FILED &amp; GRANTED<br><span class="t">PATENTS</span></h2>
+      <p style="font-size:12px;color:var(--grey);margin-bottom:2.5rem;max-width:440px" class="rv">// Hover each card to
+        flip. Three patents — rare for an undergrad. IoT meets AI meets sustainability.</p>
+
+      <div class="pat-grid">
+        <div class="pat-card rv">
+          <div class="pat-inner">
+            <div class="pat-face teal">
+              <div class="pat-badge badge-t">⭐ Patent Granted</div>
+              <div class="pat-title">AI-INTEGRATED EEG WEARABLE CAP — Real-Time Stress Analysis &amp; Feedback</div>
+              <div class="pat-desc">SVM + Random Forest on ESP32. 87% accuracy. α, β, θ band power extraction. Full edge
+                ML pipeline.</div>
+              <div class="pat-flip">// Hover to reveal details ↺</div>
+              <div class="pat-num">01</div>
+            </div>
+            <div class="pat-back">
+              <div class="pat-back-ico">🧠</div>
+              <div class="pat-badge badge-t">IEEE Hackathon Winner</div>
+              <div class="pat-back-body">First-of-kind wearable stress detection. Acquired EEG signals, filtered noise,
+                extracted band power, and ran SVM/RF inference — all on a microcontroller.</div>
+              <div class="ptags"><span class="ptag">SVM</span><span class="ptag">Random Forest</span><span
+                  class="ptag">ESP32</span><span class="ptag">Scikit-learn</span><span class="ptag">EEG</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pat-card rv">
+          <div class="pat-inner">
+            <div class="pat-face orange">
+              <div class="pat-badge badge-o">⭐ Patent Granted</div>
+              <div class="pat-title">Interactive Speech Translating Toy — Multilingual NLP for Early Language Learning
+              </div>
+              <div class="pat-desc">Sub-second STT/TTS inference on ESP32. 5+ languages. Real-time edge translation for
+                kids.</div>
+              <div class="pat-flip">// Hover to reveal details ↺</div>
+              <div class="pat-num">02</div>
+            </div>
+            <div class="pat-back">
+              <div class="pat-back-ico">🗣️</div>
+              <div class="pat-badge badge-o">NLP · Edge Speech AI</div>
+              <div class="pat-back-body">Custom amplifier circuits + STT/TTS APIs on ESP32. Supports 5+ languages with
+                sub-second response. Designed for early childhood language acquisition.</div>
+              <div class="ptags"><span class="ptag">NLP API</span><span class="ptag">TTS/STT</span><span
+                  class="ptag">ESP32</span><span class="ptag">5+ Langs</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pat-card rv">
+          <div class="pat-inner">
+            <div class="pat-face green">
+              <div class="pat-badge badge-g">🌿 Eco Patent</div>
+              <div class="pat-title">ECOPOT+ — Biodegradable Flower Pot from Millet Husk &amp; Tree Husk Powder</div>
+              <div class="pat-desc">100% biodegradable composite material. Millet husk + tree husk. Zero plastic.
+                Agricultural waste repurposed.</div>
+              <div class="pat-flip">// Hover to reveal details ↺</div>
+              <div class="pat-num">03</div>
+            </div>
+            <div class="pat-back">
+              <div class="pat-back-ico">🪴</div>
+              <div class="pat-badge badge-g">Sustainability Innovation</div>
+              <div class="pat-back-body">Addresses plastic pollution in horticulture using composite material from
+                agricultural waste. Fully biodegradable lifecycle from production to decomposition.</div>
+              <div class="ptags"><span class="ptag">Biomaterials</span><span class="ptag">Green Tech</span><span
+                  class="ptag">Sustainability</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="container">
+      <div class="sl rv">Engineering Work</div>
+      <h2 class="st rv">SELECTED<br><span class="o">PROJECTS</span></h2>
+
+      <div class="proj-grid">
+
+        <!-- FEATURED Cap Mate -->
+        <div class="pj t wide rv">
+          <div class="p3d-wrap"><div class="p3d-obj p3d-atom"></div></div>
+          <div class="pj-inner">
+            <div>
+              <div class="pj-cat t">AI · ML · Wearable Health · Patented</div>
+              <h3 class="pj-title">CAP MATE — EEG Stress Detection</h3>
+              <p class="pj-desc">Complete end-to-end ML pipeline running at the edge. Raw EEG → noise filter → band
+                power extraction (α, β, θ) → SVM/RF classification → real-time stress output. All inference on ESP32.
+                IEEE Hackathon winner.</p>
+              <div class="pj-stats">
+                <div class="pstat t">
+                  <div class="pstat-val">87%</div>
+                  <div class="pstat-lab">Accuracy</div>
+                </div>
+                <div class="pstat o">
+                  <div class="pstat-val">3</div>
+                  <div class="pstat-lab">EEG bands</div>
+                </div>
+                <div class="pstat t">
+                  <div class="pstat-val">2×</div>
+                  <div class="pstat-lab">Award wins</div>
+                </div>
+              </div>
+              <div class="pj-tags">
+                <span class="pj-tag">Python</span><span class="pj-tag">Scikit-learn</span><span
+                  class="pj-tag">SVM</span><span class="pj-tag">Random Forest</span><span
+                  class="pj-tag">ESP32</span><span class="pj-tag">NumPy</span><span class="pj-tag">Pandas</span>
+              </div>
+            </div>
+            <div class="pipeline">
+              <div class="pl-title">// ml_pipeline.py — execution flow</div>
+              <div class="pl-step t"><span class="pl-num">01</span> Raw EEG acquisition → ESP32 ADC</div>
+              <div class="pl-step o"><span class="pl-num">02</span> Noise filter + normalisation</div>
+              <div class="pl-step g"><span class="pl-num">03</span> Band power extract (α=8-12Hz, β=13-30Hz, θ=4-7Hz)
+              </div>
+              <div class="pl-step y"><span class="pl-num">04</span> SVM + Random Forest classification</div>
+              <div class="pl-step p"><span class="pl-num">05</span> Real-time stress feedback → output</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MediCare+ -->
+        <div class="pj o rv">
+          <div class="p3d-wrap"><div class="p3d-obj p3d-cross"></div></div>
+          <div class="pj-cat o">Web · AI · Emergency Healthcare</div>
+          <h3 class="pj-title">MEDICARE+ — AI Emergency Portal</h3>
+          <p class="pj-desc">Voice SOS via NLP intent classification using Web Speech API. Real-time hospital mapping
+            and automated triage. Emergency response at the speed of voice.</p>
+          <div class="pj-tags" style="margin-top:1rem">
+            <span class="pj-tag">Next.js</span><span class="pj-tag">TypeScript</span><span class="pj-tag">Web Speech
+              API</span><span class="pj-tag">NLP</span><span class="pj-tag">REST API</span>
+          </div>
+        </div>
+
+        <!-- ASIC -->
+        <div class="pj t rv">
+          <div class="p3d-wrap"><div class="p3d-obj p3d-cube"></div></div>
+          <div class="pj-cat t">VLSI · Chip Design · Medical</div>
+          <h3 class="pj-title">ASIC ACCELEROMETER — Fetal Monitor</h3>
+          <p class="pj-desc">Energy-efficient custom ASIC chip for fetal movement and heart rate monitoring. RTL design
+            optimised for ultra-low power medical wearables using Synopsys toolchain.</p>
+          <div class="pj-tags" style="margin-top:1rem">
+            <span class="pj-tag">ASIC</span><span class="pj-tag">VLSI</span><span class="pj-tag">RTL</span><span
+              class="pj-tag">Synopsys</span><span class="pj-tag">Chip Design</span>
+          </div>
+        </div>
+
+        <!-- SDN V2I -->
+        <div class="pj o rv">
+          <div class="p3d-wrap"><div class="p3d-obj p3d-planes"></div></div>
+          <div class="pj-cat o">Networking · Simulation · SDN</div>
+          <h3 class="pj-title">SDN-ASSISTED V2I COMM</h3>
+          <p class="pj-desc">Intelligent handover system in NS3. SDN-controlled Vehicle-to-Infrastructure latency
+            slashed by 40% using network optimisation algorithms on Linux.</p>
+          <div class="pj-stats" style="margin-top:1rem">
+            <div class="pstat o">
+              <div class="pstat-val" style="font-size:1.8rem">40%</div>
+              <div class="pstat-lab">Latency drop</div>
+            </div>
+          </div>
+          <div class="pj-tags">
+            <span class="pj-tag">C++</span><span class="pj-tag">NS3</span><span class="pj-tag">SDN</span><span
+              class="pj-tag">Linux</span><span class="pj-tag">Net Optim.</span>
+          </div>
+        </div>
+
+        <!-- Talking Tom -->
+        <div class="pj t rv">
+          <div class="p3d-wrap"><div class="p3d-obj p3d-wave"><span></span><span></span><span></span></div></div>
+          <div class="pj-cat t">NLP · Speech AI · Patented</div>
+          <h3 class="pj-title">MULTILINGUAL TALKING TOM</h3>
+          <p class="pj-desc">Real-time multilingual STT/TTS on ESP32 with custom amp circuits. Sub-second inference. 5+
+            languages. Designed for early childhood language acquisition support.</p>
+          <div class="pj-tags" style="margin-top:1rem">
+            <span class="pj-tag">Python</span><span class="pj-tag">NLP API</span><span
+              class="pj-tag">STT/TTS</span><span class="pj-tag">ESP32</span><span class="pj-tag">Amplifiers</span>
+          </div>
+        </div>
+
+        <!-- ECOPOT+ -->
+        <div class="pj g rv" style="background: rgba(74, 222, 128, 0.02);">
+          <div class="p3d-wrap"><div class="p3d-obj p3d-eco"></div></div>
+          <div class="pj-cat" style="color:#4ade80">Sustainability · Materials</div>
+          <h3 class="pj-title">ECOPOT+ — BIODEGRADABLE POT</h3>
+          <p class="pj-desc">100% biodegradable composite material from millet husk &amp; tree husk powder. Repurposed agricultural waste to tackle plastic pollution in horticulture.</p>
+          <div class="pj-tags" style="margin-top:1rem">
+            <span class="pj-tag" style="border-color: rgba(74, 222, 128, 0.3); color:#4ade80">Biomaterials</span><span class="pj-tag" style="border-color: rgba(74, 222, 128, 0.3); color:#4ade80">Green Tech</span><span class="pj-tag" style="border-color: rgba(74, 222, 128, 0.3); color:#4ade80">Eco</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="sk-section" id="skills">
+    <div class="container">
+      <div class="sl orange rv">Technical Stack</div>
+      <h2 class="st rv">SKILLS &amp;<br><span class="o">EXPERTISE</span></h2>
+      <div class="sk-grid">
+
+        <div class="sk-group rv">
+          <div class="sg-icon">🧠</div>
+          <div class="sg-title t">ML / DL Frameworks</div>
+          <div class="sk-row"><span>TensorFlow</span>
+            <div class="sbar">
+              <div class="sbar-f t" data-w=".9"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>PyTorch</span>
+            <div class="sbar">
+              <div class="sbar-f t" data-w=".85"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>Scikit-learn</span>
+            <div class="sbar">
+              <div class="sbar-f t" data-w=".93"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>Keras</span>
+            <div class="sbar">
+              <div class="sbar-f t" data-w=".8"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sk-group rv">
+          <div class="sg-icon">📡</div>
+          <div class="sg-title o">IoT / Embedded</div>
+          <div class="sk-row"><span>ESP32 / NodeMCU</span>
+            <div class="sbar">
+              <div class="sbar-f o" data-w=".95"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>Raspberry Pi</span>
+            <div class="sbar">
+              <div class="sbar-f o" data-w=".82"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>Arduino IDE</span>
+            <div class="sbar">
+              <div class="sbar-f o" data-w=".9"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>MQTT · Edge AI</span>
+            <div class="sbar">
+              <div class="sbar-f o" data-w=".76"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sk-group rv">
+          <div class="sg-icon">🤖</div>
+          <div class="sg-title t">AI / Intelligent Systems</div>
+          <div class="sk-row"><span>NLP</span>
+            <div class="sbar">
+              <div class="sbar-f t" data-w=".84"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>Computer Vision</span>
+            <div class="sbar">
+              <div class="sbar-f t" data-w=".78"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>LLM / Gen AI</span>
+            <div class="sbar">
+              <div class="sbar-f t" data-w=".75"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>Feature Engineering</span>
+            <div class="sbar">
+              <div class="sbar-f t" data-w=".88"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sk-group rv">
+          <div class="sg-icon">⚡</div>
+          <div class="sg-title o">VLSI / Chip Design</div>
+          <div class="sk-row"><span>ASIC Design</span>
+            <div class="sbar">
+              <div class="sbar-f o" data-w=".75"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>RTL / Verilog</span>
+            <div class="sbar">
+              <div class="sbar-f o" data-w=".72"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>Synopsys</span>
+            <div class="sbar">
+              <div class="sbar-f o" data-w=".7"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sk-group rv">
+          <div class="sg-icon">💻</div>
+          <div class="sg-title t">Programming</div>
+          <div class="sk-row"><span>Python</span>
+            <div class="sbar">
+              <div class="sbar-f t" data-w=".95"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>Embedded C</span>
+            <div class="sbar">
+              <div class="sbar-f t" data-w=".82"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>C++ / NS3</span>
+            <div class="sbar">
+              <div class="sbar-f t" data-w=".72"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>Java</span>
+            <div class="sbar">
+              <div class="sbar-f t" data-w=".68"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sk-group rv">
+          <div class="sg-icon">🛠</div>
+          <div class="sg-title o">Data & Tools</div>
+          <div class="sk-row"><span>Pandas · NumPy</span>
+            <div class="sbar">
+              <div class="sbar-f o" data-w=".92"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>OpenCV</span>
+            <div class="sbar">
+              <div class="sbar-f o" data-w=".76"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>Git · Linux</span>
+            <div class="sbar">
+              <div class="sbar-f o" data-w=".88"></div>
+            </div>
+          </div>
+          <div class="sk-row"><span>Jupyter · VS Code</span>
+            <div class="sbar">
+              <div class="sbar-f o" data-w=".93"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ACHIEVEMENTS + EDU -->
+  <section id="achievements">
+    <div class="container">
+      <div class="sl rv">Recognition</div>
+      <h2 class="st rv">ACHIEVEMENTS</h2>
+      <div class="ach-grid">
+        <div class="ach t rv">
+          <div class="ach-ico">🏆</div>
+          <div class="ach-title">IEEE Hackathon Winner</div>
+          <div class="ach-desc">First place for Cap Mate — ML + IoT innovation in wearable health. Applied AI on
+            embedded hardware.</div>
+        </div>
+        <div class="ach o rv">
+          <div class="ach-ico">🥇</div>
+          <div class="ach-title">University Hackathon Winner</div>
+          <div class="ach-desc">Winner among 60+ teams. Rapid cross-domain prototyping across AI, IoT, and embedded
+            systems.</div>
+        </div>
+        <div class="ach t rv">
+          <div class="ach-ico">📜</div>
+          <div class="ach-title">3× Patent Holder</div>
+          <div class="ach-desc">EEG stress detection, multilingual NLP speech device, and biodegradable material — all
+            before graduation.</div>
+        </div>
+      </div>
+
+      <div class="sl rv" style="margin-top:1.5rem">Certifications</div>
+      <div class="cert rv">
+        <div class="cert-ico">🏅</div>
+        <div>
+          <div class="cert-name">Tata — GenAI Powered Data Analytics Job Simulation</div>
+          <div class="cert-org">Tata Group · Forage Platform</div>
+        </div>
+      </div>
+
+      <div class="sl rv" style="margin-top:3rem">Education</div>
+      <h2 class="st rv" style="font-size:2.2rem">ACADEMIC<br><span class="t">BACKGROUND</span></h2>
+      <div class="edu-line rv">
+        <div class="edu-item">
+          <div class="edu-deg">B.Tech — Electronics &amp; Communication Engineering</div>
+          <div class="edu-school">Kalasalingam Academy of Research and Education, Tamil Nadu</div>
+          <div class="edu-meta">
+            <span>Aug 2022 – May 2026</span>
+            <span>Specialisation: IoT + AI/ML · Minor: Aeronautical Engineering</span>
+            <span class="edu-score t">CGPA 8.20/10</span>
+          </div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-deg">Board of Intermediate Education</div>
+          <div class="edu-school">Sri Viswasanthi Educational Institutions, Andhra Pradesh</div>
+          <div class="edu-meta"><span>2020 – 2022</span><span class="edu-score o">638/1000</span></div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-deg">Board of Secondary Education</div>
+          <div class="edu-school">Zilla Parishad High School, Andhra Pradesh</div>
+          <div class="edu-meta"><span>2020</span><span class="edu-score t">504/600</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="ct-section" id="contact">
+    <div class="container">
+      <div class="ct-grid">
+        <div>
+          <div class="sl rv">Get in touch</div>
+          <h2 class="ct-big rv">LET'S BUILD<br><span class="ts">intelligent</span><br>SYSTEMS.</h2>
+          <p class="ct-sub rv">Open to IoT+AI Engineer, MLOps, Edge AI, and Python Developer roles. Based in Tamil Nadu
+            — open to relocation &amp; remote.</p>
+          <div class="open-tags rv">
+            <span class="ot t">IoT+AI Engineer</span>
+            <span class="ot o">MLOps</span>
+            <span class="ot t">Edge AI</span>
+            <span class="ot o">Python Dev</span>
+            <span class="ot t">VLSI · Embedded</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px" class="rv">
+            <span class="htag">English (Fluent)</span>
+            <span class="htag">Telugu (Native)</span>
+            <span class="htag">Tamil · Hindi · Kannada</span>
+          </div>
+        </div>
+        <div class="rv">
+          <a class="cl" href="mailto:gokulnekkanti04@gmail.com">
+            <div class="cl-ico">✉️</div>gokulnekkanti04@gmail.com
+          </a>
+          <a class="cl" href="tel:+916304554987">
+            <div class="cl-ico">📱</div>+91 6304554987
+          </a>
+          <a class="cl" href="https://linkedin.com/in/nekkanti-gokul-hutaasan-b87b82251" target="_blank">
+            <div class="cl-ico">💼</div>linkedin.com/in/nekkanti-gokul-hutaasan
+          </a>
+          <a class="cl" href="https://github.com/Gokul2004-ne" target="_blank">
+            <div class="cl-ico">🐙</div>github.com/Gokul2004-ne
+          </a>
+          <a class="cl cl-main" href="mailto:gokulnekkanti04@gmail.com">// Hire Me →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Nekkanti Gokul Hutaasan · <span class="footer-iot">IoT</span> × <span class="footer-ai">AI</span> · 3× Patent
+      Holder · Madurai, TN</span>
+    <span style="color:var(--grey2)">// sensors become neurons</span>
+  </footer>
+
+  <script>
+    // ── CUSTOM CURSOR ──
+    const cur = document.getElementById('cur'), crg = document.getElementById('crg');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+    });
+    (function animRing() {
+      rx += (mx - rx) * .12; ry += (my - ry) * .12;
+      crg.style.left = rx + 'px'; crg.style.top = ry + 'px';
+      requestAnimationFrame(animRing);
+    })();
+
+    // ── BG THREE.JS — 3D IMAGE MORPHING ──
+    (function () {
+      const canvas = document.getElementById('c3d');
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: "high-performance" });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x010108, 0.02);
+
+      const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 25;
+
+      const group = new THREE.Group();
+      scene.add(group);
+
+      // Load generated 3D images
+      const loader = new THREE.TextureLoader();
+      const texIoT = loader.load('assets/iot.png');
+      const texAI = loader.load('assets/ai.png');
+      const texCombined = loader.load('assets/combined.png');
+
+      // Custom Shader to apply a soft circular mask and prevent hard rectangular borders
+      const vertShader = `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `;
+      const fragShader = `
+    uniform sampler2D tDiffuse;
+    uniform float opacity;
+    varying vec2 vUv;
+    void main() {
+      vec4 texColor = texture2D(tDiffuse, vUv);
+      
+      // Compute distance from center for circular masking
+      float dist = distance(vUv, vec2(0.5));
+      // Soft edge mask: fades out past radius 0.35 to 0.5
+      float mask = smoothstep(0.5, 0.35, dist);
+      
+      gl_FragColor = vec4(texColor.rgb, texColor.a * mask * opacity);
+    }
+  `;
+
+      // Scale of images
+      const w = 18;
+      const h = 18;
+      const geo = new THREE.PlaneGeometry(w, h);
+
+      // Plane 1: IoT Image
+      const matIoT = new THREE.ShaderMaterial({
+        uniforms: { tDiffuse: { value: texIoT }, opacity: { value: 1.0 } },
+        vertexShader: vertShader, fragmentShader: fragShader,
+        transparent: true, blending: THREE.AdditiveBlending // Makes the dark background perfectly transparent and holographic
+      });
+      const meshIoT = new THREE.Mesh(geo, matIoT);
+      group.add(meshIoT);
+
+      // Plane 2: AI Image
+      const matAI = new THREE.ShaderMaterial({
+        uniforms: { tDiffuse: { value: texAI }, opacity: { value: 1.0 } },
+        vertexShader: vertShader, fragmentShader: fragShader,
+        transparent: true, blending: THREE.AdditiveBlending
+      });
+      const meshAI = new THREE.Mesh(geo, matAI);
+      group.add(meshAI);
+
+      // Plane 3: Combined Image (Starts invisible)
+      const matCombined = new THREE.ShaderMaterial({
+        uniforms: { tDiffuse: { value: texCombined }, opacity: { value: 0.0 } },
+        vertexShader: vertShader, fragmentShader: fragShader,
+        transparent: true, blending: THREE.AdditiveBlending
+      });
+      const meshCombined = new THREE.Mesh(geo, matCombined);
+      group.add(meshCombined);
+
+      // --- Floating Neurons (AI) and IoT Objects ---
+      const objGroup = new THREE.Group();
+      group.add(objGroup);
+
+      const aiObjects = [];
+      const iotObjects = [];
+
+      // AI Neurons
+      const aiGeo = new THREE.SphereGeometry(0.08, 8, 8);
+      const aiMat = new THREE.MeshBasicMaterial({ color: 0x00ffd5, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+      for(let i=0; i<80; i++) {
+        const mesh = new THREE.Mesh(aiGeo, aiMat);
+        mesh.position.set((Math.random()-0.5)*35, (Math.random()-0.5)*30, (Math.random()-0.5)*20 - 5);
+        mesh.userData = { vx: (Math.random()-0.5)*0.018, vy: (Math.random()-0.5)*0.018, vz: (Math.random()-0.5)*0.018 };
+        objGroup.add(mesh);
+        aiObjects.push(mesh);
+      }
+      
+      const aiLineGeo = new THREE.BufferGeometry();
+      const aiLineMat = new THREE.LineBasicMaterial({ color: 0x00ffd5, transparent: true, opacity: 0.25, blending: THREE.AdditiveBlending });
+      const aiLines = new THREE.LineSegments(aiLineGeo, aiLineMat);
+      objGroup.add(aiLines);
+
+      // IoT Objects
+      const iotGeo1 = new THREE.TetrahedronGeometry(0.18, 0);
+      const iotGeo2 = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+      const iotMat = new THREE.MeshBasicMaterial({ color: 0xff6b35, wireframe: true, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+      for(let i=0; i<60; i++) {
+        const mesh = new THREE.Mesh(i%2==0 ? iotGeo1 : iotGeo2, iotMat);
+        mesh.position.set((Math.random()-0.5)*35, (Math.random()-0.5)*30, (Math.random()-0.5)*20 - 5);
+        mesh.userData = { rx: (Math.random()-0.5)*0.04, ry: (Math.random()-0.5)*0.04, vx: (Math.random()-0.5)*0.02, vy: (Math.random()-0.5)*0.02, vz: (Math.random()-0.5)*0.02 };
+        objGroup.add(mesh);
+        iotObjects.push(mesh);
+      }
+
+      // Interaction and Scroll handlers
+      let targetX = 0, targetY = 0, scrollProgress = 0, scrollTarget = 0;
+      document.addEventListener('mousemove', e => {
+        targetX = (e.clientX / window.innerWidth - 0.5) * 2.0;
+        targetY = (e.clientY / window.innerHeight - 0.5) * 2.0;
+      });
+      document.addEventListener('scroll', () => {
+        scrollTarget = Math.min(1.0, window.scrollY / 700.0);
+      });
+
+      const clock = new THREE.Clock();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const time = clock.getElapsedTime();
+        scrollProgress += (scrollTarget - scrollProgress) * 0.05;
+
+        // Subtly rotate everything via mouse position
+        group.rotation.x += (targetY * 0.1 - group.rotation.x) * 0.05;
+        group.rotation.y += (targetX * 0.2 - group.rotation.y) * 0.05;
+
+        // Cinematic Ease Transition Setup
+        let p = scrollProgress;
+        let ease = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+
+        // Animate IoT Plane (Left)
+        meshIoT.position.x = -15 * (1 - ease);
+        meshIoT.position.y = Math.sin(time * 1.2) * 0.6; // Hovering motion
+        meshIoT.rotation.y = (1 - ease) * 0.3; // Angle tilts forward when scrolling
+        meshIoT.position.z = (1 - ease) * -5;
+
+        // Animate AI Plane (Right)
+        meshAI.position.x = 15 * (1 - ease);
+        meshAI.position.y = Math.cos(time * 1.1) * 0.6;
+        meshAI.rotation.y = -(1 - ease) * 0.3;
+        meshAI.position.z = (1 - ease) * -5;
+
+        // Fade Transition Logic (Occurs heavily during ease 0.7 to 1.0)
+        let fade = Math.max(0, (ease - 0.7) * 3.33);
+
+        // Update opacities
+        meshIoT.material.uniforms.opacity.value = 1.0 - fade;
+        meshAI.material.uniforms.opacity.value = 1.0 - fade;
+        meshCombined.material.uniforms.opacity.value = fade;
+
+        // Center Combined Face floating effect
+        meshCombined.position.y = Math.sin(time * 0.8) * 0.4;
+        // Small scale bump for drama upon combining
+        let scale = 1.0 + (1.0 - fade) * 0.2;
+        meshCombined.scale.set(scale, scale, scale);
+
+        // Update floating objects (Neurons + IoT)
+        const aiPositions = [];
+        aiObjects.forEach(obj => {
+          obj.position.x += obj.userData.vx;
+          obj.position.y += obj.userData.vy;
+          obj.position.z += obj.userData.vz;
+          if(Math.abs(obj.position.x) > 12.5) obj.userData.vx *= -1;
+          if(Math.abs(obj.position.y) > 10) obj.userData.vy *= -1;
+          if(obj.position.z > 2 || obj.position.z < -12) obj.userData.vz *= -1;
+          aiPositions.push(obj.position);
+        });
+
+        const linePts = [];
+        for(let i=0; i<aiPositions.length; i++) {
+          for(let j=i+1; j<aiPositions.length; j++) {
+            if(aiPositions[i].distanceTo(aiPositions[j]) < 3.8) {
+              linePts.push(aiPositions[i], aiPositions[j]);
+            }
+          }
+        }
+        aiLines.geometry.setFromPoints(linePts);
+
+        iotObjects.forEach(obj => {
+          obj.position.x += obj.userData.vx;
+          obj.position.y += obj.userData.vy;
+          obj.position.z += obj.userData.vz;
+          obj.rotation.x += obj.userData.rx;
+          obj.rotation.y += obj.userData.ry;
+          if(Math.abs(obj.position.x) > 12.5) obj.userData.vx *= -1;
+          if(Math.abs(obj.position.y) > 10) obj.userData.vy *= -1;
+          if(obj.position.z > 2 || obj.position.z < -12) obj.userData.vz *= -1;
+        });
+
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      animate();
+    })();
+
+    // ── HERO IoT×AI 3D NETWORK CANVAS ──
+    (function () {
+      const canvas = document.getElementById('iot-ai-canvas');
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+
+      function resize() {
+        const w = canvas.parentElement.clientWidth, h = canvas.parentElement.clientHeight || 500;
+        renderer.setSize(w, h);
+        cam.aspect = w / h; cam.updateProjectionMatrix();
+      }
+
+      const scene = new THREE.Scene();
+      const cam = new THREE.PerspectiveCamera(55, 1, .1, 100);
+      cam.position.set(0, 0, 8);
+
+      // ── AI CORE — glowing central brain sphere ──
+      const coreGeo = new THREE.SphereGeometry(1, 32, 32);
+      const coreMat = new THREE.MeshBasicMaterial({ color: 0x00ffd5, wireframe: true, transparent: true, opacity: .25 });
+      const core = new THREE.Mesh(coreGeo, coreMat);
+      scene.add(core);
+
+      // inner glow sphere
+      const glowGeo = new THREE.SphereGeometry(.85, 16, 16);
+      const glowMat = new THREE.MeshBasicMaterial({ color: 0x00ffd5, transparent: true, opacity: .06 });
+      scene.add(new THREE.Mesh(glowGeo, glowMat));
+
+      // AI label plane (simulate with a ring)
+      const ringGeo = new THREE.TorusGeometry(1.15, .015, 8, 64);
+      const ringMat = new THREE.MeshBasicMaterial({ color: 0x00ffd5, transparent: true, opacity: .5 });
+      scene.add(new THREE.Mesh(ringGeo, ringMat));
+
+      // ── IOT NODES — orbiting devices ──
+      const iotDefs = [
+        { label: 'ESP32', r: 2.8, speed: .6, phase: 0, y: .4, col: 0xff6b35 },
+        { label: 'EEG Cap', r: 2.5, speed: .45, phase: 1.2, y: -.5, col: 0xff9a6c },
+        { label: 'RPi', r: 3.2, speed: .35, phase: 2.4, y: .7, col: 0xff6b35 },
+        { label: 'RFID', r: 2.6, speed: .55, phase: 3.6, y: -.3, col: 0xffb347 },
+        { label: 'Sensor', r: 3.0, speed: .5, phase: 4.8, y: .1, col: 0xff6b35 },
+        { label: 'ASIC', r: 2.4, speed: .7, phase: 6.0, y: .6, col: 0xffa07a },
+        { label: 'MQTT', r: 3.4, speed: .4, phase: 1.8, y: -.7, col: 0xff6b35 },
+        { label: 'MCU', r: 2.9, speed: .65, phase: 3.1, y: .0, col: 0xff8c69 },
+      ];
+
+      const iotNodes = [];
+      const iotSphereGeo = new THREE.SphereGeometry(.12, 10, 10);
+
+      iotDefs.forEach(def => {
+        const mat = new THREE.MeshBasicMaterial({ color: def.col });
+        const mesh = new THREE.Mesh(iotSphereGeo, mat);
+        scene.add(mesh);
+        iotNodes.push({ mesh, ...def });
+
+        // orbit ring for each node (faint ellipse)
+        const oGeo = new THREE.TorusGeometry(def.r, .005, 4, 64);
+        const oMat = new THREE.MeshBasicMaterial({ color: def.col, transparent: true, opacity: .08 });
+        const oRing = new THREE.Mesh(oGeo, oMat);
+        oRing.rotation.x = Math.random() * .5 + .2;
+        oRing.rotation.z = Math.random() * .5;
+        scene.add(oRing);
+      });
+
+      // ── DATA STREAM LINES — IoT → AI ──
+      const lineGroup = new THREE.Group();
+      scene.add(lineGroup);
+
+      function buildLines() {
+        while (lineGroup.children.length) lineGroup.remove(lineGroup.children[0]);
+        iotNodes.forEach(node => {
+          const pts = [node.mesh.position.clone(), new THREE.Vector3(0, 0, 0)];
+          const lg = new THREE.BufferGeometry().setFromPoints(pts);
+          const lm = new THREE.LineBasicMaterial({ color: 0x00ffd5, transparent: true, opacity: .12 });
+          lineGroup.add(new THREE.Line(lg, lm));
+        });
+      }
+
+      // ── FLOATING DATA PARTICLES along edges ──
+      const dataParticles = [];
+      for (let i = 0; i < 40; i++) {
+        const g = new THREE.SphereGeometry(.03, 4, 4);
+        const m = new THREE.MeshBasicMaterial({ color: i % 2 === 0 ? 0x00ffd5 : 0xff6b35, transparent: true, opacity: .8 });
+        const mesh = new THREE.Mesh(g, m);
+        const nodeIdx = Math.floor(Math.random() * iotDefs.length);
+        dataParticles.push({ mesh, nodeIdx, t: Math.random() });
+        scene.add(mesh);
+      }
+
+      // ── AI NEURAL POINTS on core ──
+      const neuralGeo = new THREE.BufferGeometry();
+      const nPos = new Float32Array(60 * 3);
+      for (let i = 0; i < 60; i++) {
+        const phi = Math.acos(-1 + 2 * (i / 60));
+        const theta = Math.sqrt(60 * Math.PI) * phi;
+        nPos[i * 3] = Math.sin(phi) * Math.cos(theta);
+        nPos[i * 3 + 1] = Math.sin(phi) * Math.sin(theta);
+        nPos[i * 3 + 2] = Math.cos(phi);
+      }
+      neuralGeo.setAttribute('position', new THREE.BufferAttribute(nPos, 3));
+      const neuralMat = new THREE.PointsMaterial({ size: .06, color: 0x00ffd5, transparent: true, opacity: .7, blending: THREE.AdditiveBlending });
+      const neuralPoints = new THREE.Points(neuralGeo, neuralMat);
+      scene.add(neuralPoints);
+
+      // drag to rotate
+      let isDrag = false, prevX = 0, prevY = 0, rotX = 0, rotY = 0, targetX = 0, targetY = 0;
+      canvas.addEventListener('mousedown', e => { isDrag = true; prevX = e.clientX; prevY = e.clientY; canvas.style.cursor = 'grabbing' });
+      canvas.addEventListener('mousemove', e => {
+        if (!isDrag) return;
+        targetY += (e.clientX - prevX) * .008;
+        targetX += (e.clientY - prevY) * .008;
+        prevX = e.clientX; prevY = e.clientY;
+      });
+      canvas.addEventListener('mouseup', () => { isDrag = false; canvas.style.cursor = 'none' });
+      canvas.addEventListener('mouseleave', () => { isDrag = false });
+
+      let t = 0;
+      const group = new THREE.Group();
+      scene.add(group);
+      iotNodes.forEach(n => group.add(n.mesh));
+      group.add(lineGroup);
+      group.add(core);
+
+      function animate() {
+        requestAnimationFrame(animate);
+        t += .008;
+
+        rotX += (targetX - rotX) * .06;
+        rotY += (targetY - rotY) * .06;
+        if (!isDrag) { targetY += .004 }
+
+        group.rotation.x = rotX;
+        group.rotation.y = rotY;
+        core.rotation.y = t * .3;
+        core.rotation.x = t * .1;
+        neuralPoints.rotation.y = t * .2;
+
+        // move IoT nodes on orbits
+        iotNodes.forEach((node, i) => {
+          const angle = t * node.speed + node.phase;
+          node.mesh.position.set(
+            Math.cos(angle) * node.r,
+            Math.sin(angle * .7) * node.y,
+            Math.sin(angle) * node.r * .6
+          );
+        });
+
+        // animate data particles along IoT→core lines
+        dataParticles.forEach(dp => {
+          dp.t = (dp.t + .008) % 1;
+          const node = iotNodes[dp.nodeIdx];
+          dp.mesh.position.lerpVectors(node.mesh.position, new THREE.Vector3(0, 0, 0), dp.t);
+          // sync with group transform
+          dp.mesh.position.applyEuler(group.rotation);
+        });
+
+        buildLines();
+        renderer.render(scene, cam);
+      }
+
+      resize();
+      window.addEventListener('resize', resize);
+      animate();
+      canvas.style.cursor = 'none';
+    })();
+
+    // ── SCROLL REVEAL ──
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => {
+            e.target.classList.add('in');
+            e.target.querySelectorAll('.sbar-f').forEach((b, j) => {
+              setTimeout(() => { b.style.transform = `scaleX(${parseFloat(b.dataset.w)})` }, j * 120 + 300);
+            });
+          }, i * 70);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: .07 });
+    document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+
+    // skill bar scroll trigger
+    document.querySelectorAll('.sk-group').forEach(g => {
+      const o = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.querySelectorAll('.sbar-f').forEach((b, j) => {
+              setTimeout(() => { b.style.transform = `scaleX(${parseFloat(b.dataset.w)})` }, j * 110 + 200);
+            });
+            o.unobserve(e.target);
+          }
+        });
+      }, { threshold: .3 });
+      o.observe(g);
+    });
+  </script>
+</body>
+
+</html>
