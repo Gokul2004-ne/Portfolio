@@ -20,22 +20,22 @@
     }
 
     :root {
-      --void: #010108;
-      --deep: #050510;
-      --surface: #0a0a1a;
-      --card: #0d0d20;
-      --card2: #111128;
-      --border: rgba(255, 255, 255, 0.05);
-      --border2: rgba(255, 255, 255, 0.1);
-      --teal: #00ffd5;
-      --teal2: #00bfa5;
-      --orange: #ff6b35;
-      --orange2: #ff9a6c;
+      --void: #04010b;
+      --deep: #0a0216;
+      --surface: #100326;
+      --card: #160436;
+      --card2: #1f064a;
+      --border: rgba(255, 255, 255, 0.07);
+      --border2: rgba(255, 255, 255, 0.15);
+      --teal: #00f0ff;
+      --teal2: #00c3ff;
+      --orange: #ff1e56;
+      --orange2: #ff477e;
       --white: #f5f5ff;
       --grey: #cbd5e1;
       --grey2: #94a3b8;
-      --glow-t: rgba(0, 255, 213, 0.18);
-      --glow-o: rgba(255, 107, 53, 0.18);
+      --glow-t: rgba(0, 240, 255, 0.18);
+      --glow-o: rgba(255, 30, 86, 0.18);
       --font-d: 'Black Han Sans', sans-serif;
       --font-m: 'JetBrains Mono', monospace;
       --font-s: 'Cormorant Garamond', serif;
@@ -2014,7 +2014,7 @@
         <div class="pj o rv">
           <div class="p3d-wrap"><div class="p3d-obj p3d-cross"></div></div>
           <div class="pj-cat o">Web · AI · Emergency Healthcare</div>
-          <h3 class="pj-title">MEDICARE+ — AI Emergency Portal</h3>
+          <h3 class="pj-title">MEDICARE+ AI Emergency Portal</h3>
           <p class="pj-desc">Voice SOS via NLP intent classification using Web Speech API. Real-time hospital mapping
             and automated triage. Emergency response at the speed of voice.</p>
           <div class="pj-tags" style="margin-top:1rem">
@@ -2069,16 +2069,45 @@
         </div>
 
         <!-- ECOPOT+ -->
-        <div class="pj g rv" style="background: rgba(74, 222, 128, 0.02);">
+        <div class="pj g rv">
           <div class="p3d-wrap"><div class="p3d-obj p3d-eco"></div></div>
           <div class="pj-cat" style="color:#4ade80">Sustainability · Materials</div>
-          <h3 class="pj-title">ECOPOT+ — BIODEGRADABLE POT</h3>
+          <h3 class="pj-title">ECOPOT+ BIODEGRADABLE POT</h3>
           <p class="pj-desc">100% biodegradable composite material from millet husk &amp; tree husk powder. Repurposed agricultural waste to tackle plastic pollution in horticulture.</p>
           <div class="pj-tags" style="margin-top:1rem">
             <span class="pj-tag" style="border-color: rgba(74, 222, 128, 0.3); color:#4ade80">Biomaterials</span><span class="pj-tag" style="border-color: rgba(74, 222, 128, 0.3); color:#4ade80">Green Tech</span><span class="pj-tag" style="border-color: rgba(74, 222, 128, 0.3); color:#4ade80">Eco</span>
           </div>
         </div>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="container">
+      <div class="sl rv" style="margin-top: 3rem;">Professional</div>
+      <h2 class="st rv" style="font-size:2.2rem">EXPERIENCE</h2>
+      <div style="position: relative; border-radius: 20px; padding: 2.5rem; background: var(--deep); border: 1px solid var(--border); overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); margin-bottom: 3rem;">
+        <canvas id="exp-canvas" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none;"></canvas>
+        <div class="edu-line rv" style="position: relative; z-index: 1;">
+          <div class="edu-item">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <div class="edu-deg">Web Development Intern</div>
+                <div class="edu-school"><span class="t" style="font-weight:700">Algonive</span> (MSME Certified), Bengaluru</div>
+              </div>
+              <div style="font-size: 11px; color: var(--grey2);">Feb 2026 to May 2026</div>
+            </div>
+            <ul style="font-size: 12px; color: var(--grey); margin-top: 1rem; margin-bottom: 1rem; padding-left: 1rem; line-height: 1.6;">
+              <li style="margin-bottom: 6px;">Built and deployed real-time web applications in a 3-month professional internship, collaborating with cross-functional teams to deliver features within sprint deadlines.</li>
+              <li>Integrated REST APIs and implemented frontend components, strengthening full-stack and API deployment skills directly applicable to ML model serving pipelines.</li>
+            </ul>
+            <div class="edu-meta" style="color: var(--grey2);">
+              <span><strong style="color: var(--white);">Tools:</strong> Next.js, React, TypeScript, REST API, Git, GitHub, VS Code</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -2091,147 +2120,84 @@
       <div class="sk-grid">
 
         <div class="sk-group rv">
+          <div class="sg-icon">💻</div>
+          <div class="sg-title t">Programming Languages</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; position:relative; z-index:1;">
+            <span class="htag" style="text-transform:none;">Python</span>
+            <span class="htag" style="text-transform:none;">Java</span>
+            <span class="htag" style="text-transform:none;">HTML</span>
+            <span class="htag" style="text-transform:none;">Embedded C</span>
+            <span class="htag" style="text-transform:none;">SQL</span>
+          </div>
+        </div>
+
+        <div class="sk-group rv">
           <div class="sg-icon">🧠</div>
-          <div class="sg-title t">ML / DL Frameworks</div>
-          <div class="sk-row"><span>TensorFlow</span>
-            <div class="sbar">
-              <div class="sbar-f t" data-w=".9"></div>
-            </div>
+          <div class="sg-title o">ML / DL Frameworks</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; position:relative; z-index:1;">
+            <span class="htag" style="text-transform:none;">TensorFlow</span>
+            <span class="htag" style="text-transform:none;">PyTorch</span>
+            <span class="htag" style="text-transform:none;">Keras</span>
+            <span class="htag" style="text-transform:none;">Scikit-learn</span>
+            <span class="htag" style="text-transform:none;">LightGBM</span>
+            <span class="htag" style="text-transform:none;">Hugging Face</span>
           </div>
-          <div class="sk-row"><span>PyTorch</span>
-            <div class="sbar">
-              <div class="sbar-f t" data-w=".85"></div>
-            </div>
+        </div>
+
+        <div class="sk-group rv">
+          <div class="sg-icon">📊</div>
+          <div class="sg-title t">Data & AI Libraries</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; position:relative; z-index:1;">
+            <span class="htag" style="text-transform:none;">Pandas</span>
+            <span class="htag" style="text-transform:none;">NumPy</span>
+            <span class="htag" style="text-transform:none;">Matplotlib</span>
+            <span class="htag" style="text-transform:none;">Seaborn</span>
+            <span class="htag" style="text-transform:none;">OpenCV</span>
           </div>
-          <div class="sk-row"><span>Scikit-learn</span>
-            <div class="sbar">
-              <div class="sbar-f t" data-w=".93"></div>
-            </div>
+        </div>
+
+        <div class="sk-group rv" style="grid-column: 1 / -1;">
+          <div class="sg-icon">🤖</div>
+          <div class="sg-title o">AI / Intelligent Systems</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; position:relative; z-index:1;">
+            <span class="htag" style="text-transform:none;">Machine Learning</span>
+            <span class="htag" style="text-transform:none;">Deep Learning</span>
+            <span class="htag" style="text-transform:none;">Neural Networks</span>
+            <span class="htag" style="text-transform:none;">NLP</span>
+            <span class="htag" style="text-transform:none;">LLM</span>
+            <span class="htag" style="text-transform:none;">Generative AI</span>
+            <span class="htag" style="text-transform:none;">Computer Vision</span>
+            <span class="htag" style="text-transform:none;">Feature Engineering</span>
+            <span class="htag" style="text-transform:none;">Model Training</span>
+            <span class="htag" style="text-transform:none;">Model Deployment</span>
+            <span class="htag" style="text-transform:none;">RAG</span>
+            <span class="htag" style="text-transform:none;">REST API</span>
           </div>
-          <div class="sk-row"><span>Keras</span>
-            <div class="sbar">
-              <div class="sbar-f t" data-w=".8"></div>
-            </div>
+        </div>
+
+        <div class="sk-group rv" style="grid-column: span 2;">
+          <div class="sg-icon">🛠</div>
+          <div class="sg-title t">Tools & DevOps</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; position:relative; z-index:1;">
+            <span class="htag" style="text-transform:none;">Git</span>
+            <span class="htag" style="text-transform:none;">GitHub</span>
+            <span class="htag" style="text-transform:none;">VS Code</span>
+            <span class="htag" style="text-transform:none;">Jupyter Notebook</span>
+            <span class="htag" style="text-transform:none;">Docker</span>
+            <span class="htag" style="text-transform:none;">MLflow</span>
+            <span class="htag" style="text-transform:none;">Arduino IDE</span>
+            <span class="htag" style="text-transform:none;">Linux</span>
           </div>
         </div>
 
         <div class="sk-group rv">
           <div class="sg-icon">📡</div>
-          <div class="sg-title o">IoT / Embedded</div>
-          <div class="sk-row"><span>ESP32 / NodeMCU</span>
-            <div class="sbar">
-              <div class="sbar-f o" data-w=".95"></div>
-            </div>
-          </div>
-          <div class="sk-row"><span>Raspberry Pi</span>
-            <div class="sbar">
-              <div class="sbar-f o" data-w=".82"></div>
-            </div>
-          </div>
-          <div class="sk-row"><span>Arduino IDE</span>
-            <div class="sbar">
-              <div class="sbar-f o" data-w=".9"></div>
-            </div>
-          </div>
-          <div class="sk-row"><span>MQTT · Edge AI</span>
-            <div class="sbar">
-              <div class="sbar-f o" data-w=".76"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="sk-group rv">
-          <div class="sg-icon">🤖</div>
-          <div class="sg-title t">AI / Intelligent Systems</div>
-          <div class="sk-row"><span>NLP</span>
-            <div class="sbar">
-              <div class="sbar-f t" data-w=".84"></div>
-            </div>
-          </div>
-          <div class="sk-row"><span>Computer Vision</span>
-            <div class="sbar">
-              <div class="sbar-f t" data-w=".78"></div>
-            </div>
-          </div>
-          <div class="sk-row"><span>LLM / Gen AI</span>
-            <div class="sbar">
-              <div class="sbar-f t" data-w=".75"></div>
-            </div>
-          </div>
-          <div class="sk-row"><span>Feature Engineering</span>
-            <div class="sbar">
-              <div class="sbar-f t" data-w=".88"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="sk-group rv">
-          <div class="sg-icon">⚡</div>
-          <div class="sg-title o">VLSI / Chip Design</div>
-          <div class="sk-row"><span>ASIC Design</span>
-            <div class="sbar">
-              <div class="sbar-f o" data-w=".75"></div>
-            </div>
-          </div>
-          <div class="sk-row"><span>RTL / Verilog</span>
-            <div class="sbar">
-              <div class="sbar-f o" data-w=".72"></div>
-            </div>
-          </div>
-          <div class="sk-row"><span>Synopsys</span>
-            <div class="sbar">
-              <div class="sbar-f o" data-w=".7"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="sk-group rv">
-          <div class="sg-icon">💻</div>
-          <div class="sg-title t">Programming</div>
-          <div class="sk-row"><span>Python</span>
-            <div class="sbar">
-              <div class="sbar-f t" data-w=".95"></div>
-            </div>
-          </div>
-          <div class="sk-row"><span>Embedded C</span>
-            <div class="sbar">
-              <div class="sbar-f t" data-w=".82"></div>
-            </div>
-          </div>
-          <div class="sk-row"><span>C++ / NS3</span>
-            <div class="sbar">
-              <div class="sbar-f t" data-w=".72"></div>
-            </div>
-          </div>
-          <div class="sk-row"><span>Java</span>
-            <div class="sbar">
-              <div class="sbar-f t" data-w=".68"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="sk-group rv">
-          <div class="sg-icon">🛠</div>
-          <div class="sg-title o">Data & Tools</div>
-          <div class="sk-row"><span>Pandas · NumPy</span>
-            <div class="sbar">
-              <div class="sbar-f o" data-w=".92"></div>
-            </div>
-          </div>
-          <div class="sk-row"><span>OpenCV</span>
-            <div class="sbar">
-              <div class="sbar-f o" data-w=".76"></div>
-            </div>
-          </div>
-          <div class="sk-row"><span>Git · Linux</span>
-            <div class="sbar">
-              <div class="sbar-f o" data-w=".88"></div>
-            </div>
-          </div>
-          <div class="sk-row"><span>Jupyter · VS Code</span>
-            <div class="sbar">
-              <div class="sbar-f o" data-w=".93"></div>
-            </div>
+          <div class="sg-title o">Embedded & IoT</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; position:relative; z-index:1;">
+            <span class="htag" style="text-transform:none;">Sensor Interfacing</span>
+            <span class="htag" style="text-transform:none;">Arduino / NodeMCU / ESP32</span>
+            <span class="htag" style="text-transform:none;">Raspberry Pi</span>
+            <span class="htag" style="text-transform:none;">Edge AI</span>
           </div>
         </div>
 
@@ -2248,40 +2214,62 @@
         <div class="ach t rv">
           <div class="ach-ico">🏆</div>
           <div class="ach-title">IEEE Hackathon Winner</div>
-          <div class="ach-desc">First place for Cap Mate — ML + IoT innovation in wearable health. Applied AI on
-            embedded hardware.</div>
+          <div class="ach-desc">First place for Cap Mate ML + IoT innovation in wearable health. Applied AI on embedded hardware.</div>
         </div>
         <div class="ach o rv">
           <div class="ach-ico">🥇</div>
           <div class="ach-title">University Hackathon Winner</div>
-          <div class="ach-desc">Winner among 60+ teams. Rapid cross-domain prototyping across AI, IoT, and embedded
-            systems.</div>
+          <div class="ach-desc">Winner among 60+ teams. Rapid cross-domain prototyping across AI, IoT, and embedded systems.</div>
         </div>
         <div class="ach t rv">
           <div class="ach-ico">📜</div>
           <div class="ach-title">3× Patent Holder</div>
-          <div class="ach-desc">EEG stress detection, multilingual NLP speech device, and biodegradable material — all
-            before graduation.</div>
+          <div class="ach-desc">EEG stress detection, multilingual NLP speech device, and biodegradable material all before graduation.</div>
         </div>
       </div>
 
       <div class="sl rv" style="margin-top:1.5rem">Certifications</div>
-      <div class="cert rv">
-        <div class="cert-ico">🏅</div>
-        <div>
-          <div class="cert-name">Tata — GenAI Powered Data Analytics Job Simulation</div>
-          <div class="cert-org">Tata Group · Forage Platform</div>
+      
+      <div class="cert rv" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+        <div style="display:flex; align-items:center; gap: 14px; width: 100%; justify-content: space-between;">
+          <div style="display:flex; align-items:center; gap: 14px;">
+            <div class="cert-ico">🎓</div>
+            <div>
+              <div class="cert-name" style="font-size: 14px;">AI/ML Course Certification IIT Patna</div>
+            </div>
+          </div>
+          <div style="font-size: 11px; color: var(--grey2);">Feb 2026</div>
+        </div>
+        <div style="font-size: 11px; color: var(--grey); line-height: 1.5; padding-left: 52px;">
+          Python, Supervised & Unsupervised Learning, Neural Networks, Deep Learning, Model Evaluation, Feature Engineering, RAG, APIs, Real-World AI/ML Applications
         </div>
       </div>
 
-      <div class="sl rv" style="margin-top:3rem">Education</div>
+      <div class="cert rv" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+        <div style="display:flex; align-items:center; gap: 14px; width: 100%; justify-content: space-between;">
+          <div style="display:flex; align-items:center; gap: 14px;">
+            <div class="cert-ico">🏅</div>
+            <div>
+              <div class="cert-name" style="font-size: 14px;">TATA GenAI Powered Data Analytics Job Simulation Forage</div>
+            </div>
+          </div>
+          <div style="font-size: 11px; color: var(--grey2);">Sept 2025</div>
+        </div>
+        <div style="font-size: 11px; color: var(--grey); line-height: 1.5; padding-left: 52px;">
+          Exploratory Data Analysis, Risk Profiling, Delinquency Prediction with AI, Data Storytelling, AI-Driven Collections Strategy
+        </div>
+      </div>
+
+      <div class="sl rv" style="margin-top:1rem">Education</div>
       <h2 class="st rv" style="font-size:2.2rem">ACADEMIC<br><span class="t">BACKGROUND</span></h2>
-      <div class="edu-line rv">
+      <div style="position: relative; border-radius: 20px; padding: 2.5rem; background: var(--deep); border: 1px solid var(--border); overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+        <canvas id="edu-canvas" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none;"></canvas>
+        <div class="edu-line rv" style="position: relative; z-index: 1;">
         <div class="edu-item">
-          <div class="edu-deg">B.Tech — Electronics &amp; Communication Engineering</div>
+          <div class="edu-deg">B.Tech Electronics & Communication Engineering</div>
           <div class="edu-school">Kalasalingam Academy of Research and Education, Tamil Nadu</div>
           <div class="edu-meta">
-            <span>Aug 2022 – May 2026</span>
+            <span>Aug 2022 to May 2026</span>
             <span>Specialisation: IoT + AI/ML · Minor: Aeronautical Engineering</span>
             <span class="edu-score t">CGPA 8.20/10</span>
           </div>
@@ -2289,13 +2277,14 @@
         <div class="edu-item">
           <div class="edu-deg">Board of Intermediate Education</div>
           <div class="edu-school">Sri Viswasanthi Educational Institutions, Andhra Pradesh</div>
-          <div class="edu-meta"><span>2020 – 2022</span><span class="edu-score o">638/1000</span></div>
+          <div class="edu-meta"><span>2020 to 2022</span><span class="edu-score o">638/1000</span></div>
         </div>
         <div class="edu-item">
           <div class="edu-deg">Board of Secondary Education</div>
           <div class="edu-school">Zilla Parishad High School, Andhra Pradesh</div>
           <div class="edu-meta"><span>2020</span><span class="edu-score t">504/600</span></div>
         </div>
+      </div>
       </div>
     </div>
   </section>
@@ -2527,10 +2516,22 @@
 
         // Update floating objects (Neurons + IoT)
         const aiPositions = [];
-        aiObjects.forEach(obj => {
-          obj.position.x += obj.userData.vx;
-          obj.position.y += obj.userData.vy;
+        aiObjects.forEach((obj, idx) => {
+          // Unpredictable movement
+          obj.position.x += obj.userData.vx + Math.sin(time * 3 + idx) * 0.02;
+          obj.position.y += obj.userData.vy + Math.cos(time * 2.5 + idx) * 0.02;
           obj.position.z += obj.userData.vz;
+          
+          // Occasional random dash
+          if (Math.random() < 0.002) {
+            obj.userData.vx = (Math.random()-0.5)*0.08;
+            obj.userData.vy = (Math.random()-0.5)*0.08;
+          } else {
+            // Revert towards normal speed smoothly
+            obj.userData.vx += (Math.sign(obj.userData.vx) * 0.018 - obj.userData.vx) * 0.05;
+            obj.userData.vy += (Math.sign(obj.userData.vy) * 0.018 - obj.userData.vy) * 0.05;
+          }
+
           if(Math.abs(obj.position.x) > 12.5) obj.userData.vx *= -1;
           if(Math.abs(obj.position.y) > 10) obj.userData.vy *= -1;
           if(obj.position.z > 2 || obj.position.z < -12) obj.userData.vz *= -1;
@@ -2547,12 +2548,18 @@
         }
         aiLines.geometry.setFromPoints(linePts);
 
-        iotObjects.forEach(obj => {
-          obj.position.x += obj.userData.vx;
-          obj.position.y += obj.userData.vy;
+        iotObjects.forEach((obj, idx) => {
+          obj.position.x += obj.userData.vx + Math.sin(time * 2 + idx) * 0.03;
+          obj.position.y += obj.userData.vy + Math.cos(time * 1.5 + idx) * 0.03;
           obj.position.z += obj.userData.vz;
-          obj.rotation.x += obj.userData.rx;
-          obj.rotation.y += obj.userData.ry;
+          
+          obj.rotation.x += obj.userData.rx + (Math.random()-0.5)*0.05;
+          obj.rotation.y += obj.userData.ry + (Math.random()-0.5)*0.05;
+          
+          // Random scale pulsing
+          const s = 1 + Math.sin(time * 8 + idx) * 0.3;
+          obj.scale.setScalar(s);
+
           if(Math.abs(obj.position.x) > 12.5) obj.userData.vx *= -1;
           if(Math.abs(obj.position.y) > 10) obj.userData.vy *= -1;
           if(obj.position.z > 2 || obj.position.z < -12) obj.userData.vz *= -1;
@@ -2705,21 +2712,31 @@
         core.rotation.x = t * .1;
         neuralPoints.rotation.y = t * .2;
 
-        // move IoT nodes on orbits
+        // move IoT nodes on orbits with unpredictable offsets
         iotNodes.forEach((node, i) => {
           const angle = t * node.speed + node.phase;
+          const chaos = Math.sin(t * 5 + i) * 0.15;
           node.mesh.position.set(
-            Math.cos(angle) * node.r,
-            Math.sin(angle * .7) * node.y,
-            Math.sin(angle) * node.r * .6
+            Math.cos(angle) * (node.r + chaos),
+            Math.sin(angle * .7) * node.y + Math.cos(t * 3 + i) * 0.2,
+            Math.sin(angle) * (node.r + chaos) * .6
           );
+          node.mesh.scale.setScalar(1 + Math.sin(t * 10 + i) * 0.2); // unpredictable pulsing
         });
 
         // animate data particles along IoT→core lines
         dataParticles.forEach(dp => {
-          dp.t = (dp.t + .008) % 1;
+          dp.t = (dp.t + .008 + Math.random() * 0.005) % 1; // Unpredictable speed
           const node = iotNodes[dp.nodeIdx];
-          dp.mesh.position.lerpVectors(node.mesh.position, new THREE.Vector3(0, 0, 0), dp.t);
+          dp.mesh.position.lerpVectors(node.mesh.position, new THREE.Vector3(
+            Math.sin(t * 10 + dp.nodeIdx) * 0.2, 
+            Math.cos(t * 8 + dp.nodeIdx) * 0.2, 
+            0
+          ), dp.t);
+          // Add chaotic jitter
+          dp.mesh.position.x += (Math.random() - 0.5) * 0.05;
+          dp.mesh.position.y += (Math.random() - 0.5) * 0.05;
+          dp.mesh.position.z += (Math.random() - 0.5) * 0.05;
           // sync with group transform
           dp.mesh.position.applyEuler(group.rotation);
         });
@@ -2732,6 +2749,210 @@
       window.addEventListener('resize', resize);
       animate();
       canvas.style.cursor = 'none';
+    })();
+
+    // ── EXPERIENCE UNPREDICTABLE 3D CANVAS ──
+    (function () {
+      const canvas = document.getElementById('exp-canvas');
+      if (!canvas) return;
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+
+      function resize() {
+        const w = canvas.parentElement.clientWidth, h = canvas.parentElement.clientHeight;
+        renderer.setSize(w, h);
+        cam.aspect = w / h; cam.updateProjectionMatrix();
+      }
+
+      const scene = new THREE.Scene();
+      const cam = new THREE.PerspectiveCamera(55, 1, .1, 1000);
+      cam.position.set(0, 0, 10);
+
+      const shapes = [];
+      const geometries = [
+        new THREE.TetrahedronGeometry(1.2, 1),
+        new THREE.TorusKnotGeometry(0.8, 0.2, 64, 8),
+        new THREE.OctahedronGeometry(1.0, 0),
+        new THREE.IcosahedronGeometry(0.9, 0),
+        new THREE.SphereGeometry(0.5, 8, 8)
+      ];
+      
+      const colors = [0x00f0ff, 0xff1e56, 0x4ade80, 0xa78bfa, 0xfbbf24];
+
+      const nodeCount = 35; // reduced for smaller section
+      for (let i = 0; i < nodeCount; i++) {
+        const geo = geometries[Math.floor(Math.random() * geometries.length)];
+        const mat = new THREE.MeshBasicMaterial({ 
+          color: colors[Math.floor(Math.random() * colors.length)], 
+          wireframe: true, 
+          transparent: true, 
+          opacity: 0.15 + Math.random() * 0.3 
+        });
+        const mesh = new THREE.Mesh(geo, mat);
+        
+        mesh.position.set((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 12, (Math.random() - 0.5) * 8 - 2);
+        
+        mesh.userData = {
+          rx: (Math.random() - 0.5) * 0.05,
+          ry: (Math.random() - 0.5) * 0.05,
+          vx: (Math.random() - 0.5) * 0.04,
+          vy: (Math.random() - 0.5) * 0.06,
+          vz: (Math.random() - 0.5) * 0.04,
+          chaosFactor: Math.random() * 0.03,
+          baseScale: Math.random() * 1.0 + 0.5
+        };
+        
+        mesh.scale.setScalar(mesh.userData.baseScale);
+        scene.add(mesh);
+        shapes.push(mesh);
+      }
+
+      const lineGeo = new THREE.BufferGeometry();
+      const lineMat = new THREE.LineBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.1, blending: THREE.AdditiveBlending });
+      const lineNetwork = new THREE.LineSegments(lineGeo, lineMat);
+      scene.add(lineNetwork);
+
+      let t = 0;
+      function animate() {
+        requestAnimationFrame(animate);
+        t += 0.005;
+        
+        const positions = [];
+
+        shapes.forEach((mesh, idx) => {
+          mesh.position.x += mesh.userData.vx + Math.sin(t * 3 + mesh.userData.chaosFactor * 100) * 0.02;
+          mesh.position.y += mesh.userData.vy + Math.cos(t * 2.5 + mesh.userData.chaosFactor * 100) * 0.02;
+          mesh.position.z += mesh.userData.vz;
+          
+          mesh.rotation.x += mesh.userData.rx + Math.sin(t) * mesh.userData.chaosFactor;
+          mesh.rotation.y += mesh.userData.ry + Math.cos(t) * mesh.userData.chaosFactor;
+          
+          const s = mesh.userData.baseScale + Math.sin(t * 8 * mesh.userData.chaosFactor * 50) * 0.4;
+          mesh.scale.setScalar(s);
+          
+          if(Math.abs(mesh.position.x) > 12) mesh.userData.vx *= -1;
+          if(Math.abs(mesh.position.y) > 8) mesh.userData.vy *= -1;
+          if(mesh.position.z > 5 || mesh.position.z < -10) mesh.userData.vz *= -1;
+          
+          if(Math.random() < 0.003) {
+            mesh.userData.vx = (Math.random() - 0.5) * 0.1;
+            mesh.userData.vy = (Math.random() - 0.5) * 0.15;
+          }
+
+          positions.push(mesh.position);
+        });
+
+        const linePts = [];
+        for(let i=0; i<positions.length; i++) {
+          for(let j=i+1; j<positions.length; j++) {
+            if(positions[i].distanceTo(positions[j]) < 5.0) {
+              linePts.push(positions[i], positions[j]);
+            }
+          }
+        }
+        lineNetwork.geometry.setFromPoints(linePts);
+        
+        scene.rotation.y = Math.sin(t * 0.5) * 0.2;
+        scene.rotation.x = Math.cos(t * 0.3) * 0.1;
+
+        renderer.render(scene, cam);
+      }
+
+      resize();
+      window.addEventListener('resize', resize);
+      animate();
+    })();
+
+    // ── EDU UNPREDICTABLE 3D CANVAS ──
+    (function () {
+      const canvas = document.getElementById('edu-canvas');
+      if (!canvas) return;
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+
+      function resize() {
+        const w = canvas.parentElement.clientWidth, h = canvas.parentElement.clientHeight;
+        renderer.setSize(w, h);
+        cam.aspect = w / h; cam.updateProjectionMatrix();
+      }
+
+      const scene = new THREE.Scene();
+      const cam = new THREE.PerspectiveCamera(55, 1, .1, 100);
+      cam.position.set(0, 0, 10);
+
+      const shapes = [];
+      const geometries = [
+        new THREE.TetrahedronGeometry(0.8, 1),
+        new THREE.TorusKnotGeometry(0.5, 0.15, 64, 8),
+        new THREE.OctahedronGeometry(0.7, 0),
+        new THREE.IcosahedronGeometry(0.6, 0)
+      ];
+      
+      const colors = [0x00f0ff, 0xff1e56, 0x4ade80, 0xa78bfa, 0xfbbf24];
+
+      for (let i = 0; i < 25; i++) {
+        const geo = geometries[Math.floor(Math.random() * geometries.length)];
+        const mat = new THREE.MeshBasicMaterial({ 
+          color: colors[Math.floor(Math.random() * colors.length)], 
+          wireframe: true, 
+          transparent: true, 
+          opacity: 0.3 + Math.random() * 0.4 
+        });
+        const mesh = new THREE.Mesh(geo, mat);
+        
+        mesh.position.set((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 12, (Math.random() - 0.5) * 8 - 2);
+        
+        // Unpredictable movement parameters
+        mesh.userData = {
+          rx: (Math.random() - 0.5) * 0.05,
+          ry: (Math.random() - 0.5) * 0.05,
+          vx: (Math.random() - 0.5) * 0.03,
+          vy: (Math.random() - 0.5) * 0.03,
+          vz: (Math.random() - 0.5) * 0.03,
+          chaosFactor: Math.random() * 0.02,
+          baseScale: Math.random() * 1.5 + 0.5
+        };
+        
+        mesh.scale.setScalar(mesh.userData.baseScale);
+        scene.add(mesh);
+        shapes.push(mesh);
+      }
+
+      let t = 0;
+      function animate() {
+        requestAnimationFrame(animate);
+        t += 0.01;
+        
+        shapes.forEach(mesh => {
+          // Unpredictable movement
+          mesh.position.x += mesh.userData.vx + Math.sin(t * 2 + mesh.userData.chaosFactor * 100) * 0.01;
+          mesh.position.y += mesh.userData.vy + Math.cos(t * 1.5 + mesh.userData.chaosFactor * 100) * 0.01;
+          mesh.position.z += mesh.userData.vz;
+          
+          mesh.rotation.x += mesh.userData.rx + Math.sin(t) * mesh.userData.chaosFactor;
+          mesh.rotation.y += mesh.userData.ry + Math.cos(t) * mesh.userData.chaosFactor;
+          
+          // Unpredictable scaling
+          const s = mesh.userData.baseScale + Math.sin(t * 5 * mesh.userData.chaosFactor * 50) * 0.3;
+          mesh.scale.setScalar(s);
+          
+          if(Math.abs(mesh.position.x) > 12) mesh.userData.vx *= -1;
+          if(Math.abs(mesh.position.y) > 8) mesh.userData.vy *= -1;
+          if(mesh.position.z > 2 || mesh.position.z < -10) mesh.userData.vz *= -1;
+          
+          // Occasional sudden direction change
+          if(Math.random() < 0.005) {
+            mesh.userData.vx = (Math.random() - 0.5) * 0.05;
+            mesh.userData.vy = (Math.random() - 0.5) * 0.05;
+          }
+        });
+        
+        renderer.render(scene, cam);
+      }
+
+      resize();
+      window.addEventListener('resize', resize);
+      animate();
     })();
 
     // ── SCROLL REVEAL ──
